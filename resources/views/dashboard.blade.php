@@ -33,12 +33,20 @@
                  and trained averages tell different stories (a trial key often has a
                  healthy Gemini web score while the trained average sits near zero). --}}
             @if (($overallScores['web'] ?? null) !== null || ($overallScores['trained'] ?? null) !== null)
-                <div class="flex shrink-0 items-center gap-4">
+                {{-- Mode captions sit BELOW the rings — inside the circle they
+                     overflow it (two-line "OFFLINE · TRAINED" spills past the arc). --}}
+                <div class="flex shrink-0 items-center gap-5">
                     @if (($overallScores['web'] ?? null) !== null)
-                        <x-brandgeo-nova::score-ring :score="$overallScores['web']" :size="104" label="Online · Web" />
+                        <div class="flex flex-col items-center gap-1.5">
+                            <x-brandgeo-nova::score-ring :score="$overallScores['web']" :size="104" />
+                            <span class="whitespace-nowrap text-[10px] font-bold uppercase tracking-widest text-zinc-500">Online · Web</span>
+                        </div>
                     @endif
                     @if (($overallScores['trained'] ?? null) !== null)
-                        <x-brandgeo-nova::score-ring :score="$overallScores['trained']" :size="(($overallScores['web'] ?? null) !== null) ? 88 : 104" label="Offline · Trained" />
+                        <div class="flex flex-col items-center gap-1.5">
+                            <x-brandgeo-nova::score-ring :score="$overallScores['trained']" :size="(($overallScores['web'] ?? null) !== null) ? 88 : 104" />
+                            <span class="whitespace-nowrap text-[10px] font-bold uppercase tracking-widest text-zinc-500">Offline · Trained</span>
+                        </div>
                     @endif
                 </div>
             @else
@@ -58,7 +66,7 @@
                         <span class="rounded-md bg-purple-500/10 px-2 py-1 text-purple-300">monitor · {{ $brand->monitor->status->value }}</span>
                     @endif
                     @if ($sub->onTrial)
-                        <span class="rounded-md bg-amber-500/10 px-2 py-1 text-amber-300">⏳ {{ $sub->trialDaysRemaining }} trial days left — engines beyond Gemini locked</span>
+                        <span class="rounded-md bg-amber-500/10 px-2 py-1 text-amber-300">⏳ {{ $sub->trialDaysRemaining }} trial days left</span>
                     @endif
                 </div>
             </div>
