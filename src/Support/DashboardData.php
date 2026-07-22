@@ -26,11 +26,40 @@ class DashboardData
 
     private function remember(string $key, callable $resolve): mixed
     {
-        return Cache::remember(
-            "{$this->prefix}.{$key}",
-            (int) config('brandgeo-nova.cache_ttl', 60),
-            $resolve,
-        );
+        $cacheKey = "{$this->prefix}.{$key}";
+        $ttl = (int) config('brandgeo-nova.cache_ttl', 60);
+
+        $value = Cache::remember($cacheKey, $ttl, $resolve);
+
+        // A cached entry written under a different autoload state (composer
+        // install in flight, opcache serving a stale classmap, a DTO renamed
+        // between package versions) unserializes to __PHP_Incomplete_Class
+        // instead of throwing. Drop the poisoned entry and resolve fresh so
+        // the dashboard self-heals instead of 500-ing until the TTL passes.
+        if ($this->holdsIncompleteClass($value)) {
+            Cache::forget($cacheKey);
+
+            $value = Cache::remember($cacheKey, $ttl, $resolve);
+        }
+
+        return $value;
+    }
+
+    private function holdsIncompleteClass(mixed $value): bool
+    {
+        if (is_object($value) && get_class($value) === \__PHP_Incomplete_Class::class) {
+            return true;
+        }
+
+        if (is_array($value)) {
+            foreach ($value as $item) {
+                if ($this->holdsIncompleteClass($item)) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
     public function flush(?string $brandUuid = null): void

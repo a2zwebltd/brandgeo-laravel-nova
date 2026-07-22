@@ -4,6 +4,7 @@ namespace A2ZWeb\BrandGeoNova;
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
+use Laravel\Nova\Http\Middleware\Authenticate;
 use Laravel\Nova\Http\Middleware\Authorize;
 use Laravel\Nova\Nova;
 
@@ -31,9 +32,11 @@ class BrandGeoNovaServiceProvider extends ServiceProvider
             ->group(__DIR__.'/../routes/web.php');
 
         // The Inertia page inside the Nova SPA (shares Nova's menu/chrome).
+        // Authenticate before Authorize, matching Nova's own tool scaffold:
+        // guests get the login redirect rather than a bare 403.
         if (class_exists(Nova::class)) {
             $this->app->booted(function () {
-                Nova::router(['nova', Authorize::class], 'brandgeo')
+                Nova::router(['nova', Authenticate::class, Authorize::class], 'brandgeo')
                     ->group(__DIR__.'/../routes/inertia.php');
             });
         }
