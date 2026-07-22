@@ -49,13 +49,15 @@ return [
     | Cache TTL
     |--------------------------------------------------------------------------
     |
-    | Seconds to cache API responses. Keeps repeat page loads fast and trial
-    | accounts under their 30 req/min limit. The "Refresh data" button
-    | bypasses it.
+    | Seconds to cache API responses. Audits and monitoring snapshots change
+    | rarely (weekly runs), so an hour keeps the dashboard instant and trial
+    | accounts far under their 30 req/min limit; the "Refresh data" button
+    | bypasses the cache whenever fresher data is needed. Override per app
+    | with BRANDGEO_NOVA_CACHE_TTL.
     |
     */
 
-    'cache_ttl' => env('BRANDGEO_NOVA_CACHE_TTL', 60),
+    'cache_ttl' => env('BRANDGEO_NOVA_CACHE_TTL', 3600),
 
     /*
     |--------------------------------------------------------------------------

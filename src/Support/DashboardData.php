@@ -27,7 +27,7 @@ class DashboardData
     private function remember(string $key, callable $resolve): mixed
     {
         $cacheKey = "{$this->prefix}.{$key}";
-        $ttl = (int) config('brandgeo-nova.cache_ttl', 60);
+        $ttl = (int) config('brandgeo-nova.cache_ttl', 3600);
 
         $value = Cache::remember($cacheKey, $ttl, $resolve);
 

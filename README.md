@@ -73,7 +73,7 @@ php artisan vendor:publish --tag=brandgeo-nova-config
 | `path` | `brandgeo-dashboard` | URL of the standalone dashboard (also loaded in the Nova iframe) |
 | `middleware` | `['web', Nova Authenticate]` | Only Nova-authorized users can access it |
 | `default_brand` | `env('BRANDGEO_DEFAULT_BRAND')` | Brand uuid opened by default ("Set as default" writes it) |
-| `cache_ttl` | `60` | Seconds to cache API responses (the "Refresh data" button bypasses it) |
+| `cache_ttl` | `3600` | Seconds to cache API responses — override via `BRANDGEO_NOVA_CACHE_TTL` (the "Refresh data" button bypasses it) |
 | `app_url` | derived from client `base_url` | Base for "Open in BrandGEO" deep links |
 
 Client settings (base URL, timeouts, TLS verify) come from [`brandgeo-laravel-client`](https://github.com/a2zwebltd/brandgeo-laravel-client) — see `BRANDGEO_BASE_URL`, `BRANDGEO_API_KEY`, `BRANDGEO_VERIFY_SSL`.
