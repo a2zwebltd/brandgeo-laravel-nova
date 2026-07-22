@@ -79,6 +79,7 @@ class DashboardController extends Controller
             'audits' => $audits ?? [],
             'audit' => $auditDetail,
             'dimensions' => $data->dimensionAverages($auditDetail),
+            'overallScores' => $data->overallScores($auditDetail),
             'monitoring' => $monitoring,
             'categoryInsights' => $monitoring
                 ? MonitorInsights::categories($monitoring['runs'], $monitoring['templates'])

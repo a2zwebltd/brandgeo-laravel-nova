@@ -139,6 +139,36 @@ class DashboardData
     }
 
     /**
+     * Average normalized score per audit mode, mirroring the BrandGEO app's
+     * AuditRequest::overallAverageScore(). Audit::overallScore alone is the
+     * trained-mode average — on a trial with only Gemini unlocked that reads
+     * as a misleading near-zero while web search scores healthily.
+     *
+     * @return array{trained: ?float, web: ?float}
+     */
+    public function overallScores(?Audit $audit): array
+    {
+        $scores = ['trained' => [], 'web' => []];
+
+        foreach ($audit?->reports ?? [] as $report) {
+            if ($report->isLocked() || $report->normalizedScore === null) {
+                continue;
+            }
+
+            $scores[$report->mode === AuditMode::WebSearch ? 'web' : 'trained'][] = $report->normalizedScore;
+        }
+
+        $average = fn (array $values) => $values === []
+            ? null
+            : round(array_sum($values) / count($values), 1);
+
+        return [
+            'trained' => $average($scores['trained']),
+            'web' => $average($scores['web']),
+        ];
+    }
+
+    /**
      * Aggregate per-dimension averages across the audit's reports.
      *
      * @return array{trained: array<string, ?float>, web: array<string, ?float>, hasWeb: bool}

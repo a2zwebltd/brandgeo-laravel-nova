@@ -29,7 +29,21 @@
     {{-- ============================ Brand hero ============================ --}}
     <section class="rounded-3xl border border-white/10 bg-gradient-to-br from-zinc-900 to-zinc-950 p-6">
         <div class="flex flex-wrap items-center gap-6">
-            <x-brandgeo-nova::score-ring :score="$overall" :size="104" label="AI visibility" />
+            {{-- Both audit modes, like the BrandGEO app's dual rings: the web-search
+                 and trained averages tell different stories (a trial key often has a
+                 healthy Gemini web score while the trained average sits near zero). --}}
+            @if (($overallScores['web'] ?? null) !== null || ($overallScores['trained'] ?? null) !== null)
+                <div class="flex shrink-0 items-center gap-4">
+                    @if (($overallScores['web'] ?? null) !== null)
+                        <x-brandgeo-nova::score-ring :score="$overallScores['web']" :size="104" label="Online · Web" />
+                    @endif
+                    @if (($overallScores['trained'] ?? null) !== null)
+                        <x-brandgeo-nova::score-ring :score="$overallScores['trained']" :size="(($overallScores['web'] ?? null) !== null) ? 88 : 104" label="Offline · Trained" />
+                    @endif
+                </div>
+            @else
+                <x-brandgeo-nova::score-ring :score="$overall" :size="104" label="AI visibility" />
+            @endif
             <div class="min-w-0 flex-1">
                 <h1 class="truncate text-2xl font-extrabold">{{ $brand->name }}</h1>
                 <p class="mt-0.5 truncate text-sm text-zinc-400">
@@ -210,8 +224,21 @@
             {{-- Engines with drill-down — grouped by mode: Online (web search) first, then Offline (trained) --}}
             @php
                 $providerOrder = array_keys(Presentation::PROVIDER_COLORS);
-                $modeGroups = collect($audit->reports ?? [])
-                    ->sortBy(fn ($report) => array_search($report->provider->value, $providerOrder))
+                $reports = collect($audit->reports ?? []);
+
+                // Engines with results float to the top, best score first, and the
+                // OTHER mode's section keeps the same engine order (each engine is
+                // ranked by its best score across both modes), so an engine and its
+                // counterpart sit in the same slot. Locked/unscored slots sink to
+                // the bottom; the provider palette order only breaks ties.
+                $bestScores = $reports
+                    ->groupBy(fn ($report) => $report->provider->value)
+                    ->map(fn ($group) => $group->max(fn ($report) => $report->isLocked() ? null : $report->normalizedScore));
+
+                $modeGroups = $reports
+                    ->sort(fn ($a, $b) => (($bestScores[$b->provider->value] ?? -1) <=> ($bestScores[$a->provider->value] ?? -1))
+                        ?: (array_search($a->provider->value, $providerOrder) <=> array_search($b->provider->value, $providerOrder)))
+                    ->values()
                     ->groupBy(fn ($report) => $report->mode->value)
                     ->sortKeysDesc(); // web_search before trained
             @endphp
