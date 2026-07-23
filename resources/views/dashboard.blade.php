@@ -52,7 +52,7 @@
                     @if ($trainedScore !== null)
                         @php [$trainedTone, , , $trainedBand] = Presentation::score($trainedScore); @endphp
                         <div class="flex flex-col items-center gap-1.5">
-                            <x-brandgeo-nova::score-ring :score="$trainedScore" :size="$webScore !== null ? 88 : 104" />
+                            <x-brandgeo-nova::score-ring :score="$trainedScore" :size="104" />
                             <span class="whitespace-nowrap text-[10px] font-bold uppercase tracking-widest text-zinc-500">Offline · Trained</span>
                             <span class="rounded-full bg-zinc-100 px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider dark:bg-white/5 {{ $trainedTone }}">{{ $trainedBand }}</span>
                         </div>

@@ -94,7 +94,10 @@
     {{-- BrandGEO branded header --}}
     <header class="sticky top-0 z-40 border-b border-zinc-200 bg-gradient-to-r from-violet-50 via-white to-blue-50/90 backdrop-blur dark:border-white/10 dark:from-violet-950 dark:via-zinc-950 dark:to-blue-950/95">
         <div class="mx-auto flex max-w-7xl items-center gap-4 px-6 {{ $embedded ? 'py-2.5' : 'py-4' }}">
-            <a href="{{ route('brandgeo-nova.dashboard', array_filter(['embedded' => request('embedded')])) }}" class="flex items-center">
+            {{-- The logo's wordmark is white, so in light mode it needs a dark
+                 plate behind it; in dark mode the header already is one. --}}
+            <a href="{{ route('brandgeo-nova.dashboard', array_filter(['embedded' => request('embedded')])) }}"
+               class="flex items-center rounded-xl bg-zinc-900 px-3 py-1.5 dark:bg-transparent dark:px-0 dark:py-0">
                 <img src="{{ route('brandgeo-nova.logo') }}" alt="BrandGEO" class="{{ $embedded ? 'h-7' : 'h-9' }} w-auto" />
             </a>
             @unless ($embedded)
