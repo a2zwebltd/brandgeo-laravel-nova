@@ -15,7 +15,7 @@
     $weakestKey = $weakest->keys()->first();
     $weakestScore = $weakest->first();
 @endphp
-<div class="space-y-5 border-t border-white/5 px-5 py-5">
+<div class="space-y-5 border-t border-zinc-200 px-5 py-5 dark:border-white/5">
     {{-- Key findings --}}
     @if ($report->findings)
         <div>
@@ -30,7 +30,7 @@
 
     {{-- Weakest dimension callout --}}
     @if ($weakestKey !== null && $weakestScore < 60)
-        <div class="flex items-center gap-2 rounded-xl border border-amber-500/30 bg-amber-500/10 px-4 py-2.5 text-sm text-amber-200">
+        <div class="flex items-center gap-2 rounded-xl border border-amber-500/30 bg-amber-500/10 px-4 py-2.5 text-sm text-amber-800 dark:text-amber-200">
             ⚠ Weakest dimension: <strong>{{ Presentation::SECTION_LABELS[$weakestKey] ?? $weakestKey }}</strong>
             — {{ number_format($weakestScore, 0) }}/100
         </div>
@@ -40,28 +40,28 @@
     @if ($metadata !== [])
         <div class="flex flex-wrap gap-2 text-[11px] text-zinc-500">
             @if (! empty($metadata['knowledge_cutoff']))
-                <span class="rounded bg-white/5 px-2 py-1">Knowledge cutoff: <strong class="text-zinc-300">{{ $metadata['knowledge_cutoff'] }}</strong></span>
+                <span class="rounded bg-zinc-100 px-2 py-1 dark:bg-white/5">Knowledge cutoff: <strong class="text-zinc-700 dark:text-zinc-300">{{ $metadata['knowledge_cutoff'] }}</strong></span>
             @endif
             @if (! empty($metadata['data_source']))
-                <span class="rounded bg-white/5 px-2 py-1">Data source: <strong class="text-zinc-300">{{ ucwords(str_replace('_', ' ', $metadata['data_source'])) }}</strong></span>
+                <span class="rounded bg-zinc-100 px-2 py-1 dark:bg-white/5">Data source: <strong class="text-zinc-700 dark:text-zinc-300">{{ ucwords(str_replace('_', ' ', $metadata['data_source'])) }}</strong></span>
             @endif
             @if ($report->model)
-                <span class="rounded bg-white/5 px-2 py-1">Model: <strong class="text-zinc-300">{{ $report->model }}</strong></span>
+                <span class="rounded bg-zinc-100 px-2 py-1 dark:bg-white/5">Model: <strong class="text-zinc-700 dark:text-zinc-300">{{ $report->model }}</strong></span>
             @endif
         </div>
     @endif
 
     {{-- Analysis --}}
     @if (! empty($analysis['visibility_summary']))
-        <p class="text-sm leading-relaxed text-zinc-300">{{ $analysis['visibility_summary'] }}</p>
+        <p class="text-sm leading-relaxed text-zinc-600 dark:text-zinc-300">{{ $analysis['visibility_summary'] }}</p>
     @endif
 
     @if (! empty($analysis['top_strengths']) || ! empty($analysis['top_weaknesses']) || ! empty($analysis['priority_actions']))
         <div class="grid gap-4 md:grid-cols-3">
             @if (! empty($analysis['top_strengths']))
                 <div class="rounded-xl border border-emerald-500/20 bg-emerald-500/5 p-3">
-                    <p class="mb-1.5 text-[10px] font-bold uppercase tracking-widest text-emerald-300">Strengths</p>
-                    <ul class="space-y-1 text-xs text-zinc-300">
+                    <p class="mb-1.5 text-[10px] font-bold uppercase tracking-widest text-emerald-700 dark:text-emerald-300">Strengths</p>
+                    <ul class="space-y-1 text-xs text-zinc-600 dark:text-zinc-300">
                         @foreach ($analysis['top_strengths'] as $item)
                             <li>• {{ is_array($item) ? ($item['detail'] ?? implode(' — ', array_filter($item, 'is_string'))) : $item }}</li>
                         @endforeach
@@ -70,8 +70,8 @@
             @endif
             @if (! empty($analysis['top_weaknesses']))
                 <div class="rounded-xl border border-red-500/20 bg-red-500/5 p-3">
-                    <p class="mb-1.5 text-[10px] font-bold uppercase tracking-widest text-red-300">Areas for improvement</p>
-                    <ul class="space-y-1 text-xs text-zinc-300">
+                    <p class="mb-1.5 text-[10px] font-bold uppercase tracking-widest text-red-700 dark:text-red-300">Areas for improvement</p>
+                    <ul class="space-y-1 text-xs text-zinc-600 dark:text-zinc-300">
                         @foreach ($analysis['top_weaknesses'] as $item)
                             <li>• {{ is_array($item) ? trim(($item['issue'] ?? '').(isset($item['recommendation']) ? ' — '.$item['recommendation'] : '')) : $item }}</li>
                         @endforeach
@@ -80,8 +80,8 @@
             @endif
             @if (! empty($analysis['priority_actions']))
                 <div class="rounded-xl border border-violet-500/20 bg-violet-500/5 p-3">
-                    <p class="mb-1.5 text-[10px] font-bold uppercase tracking-widest text-violet-300">Priority actions</p>
-                    <ol class="space-y-1 text-xs text-zinc-300">
+                    <p class="mb-1.5 text-[10px] font-bold uppercase tracking-widest text-violet-700 dark:text-violet-300">Priority actions</p>
+                    <ol class="space-y-1 text-xs text-zinc-600 dark:text-zinc-300">
                         @foreach ($analysis['priority_actions'] as $i => $action)
                             <li>{{ $i + 1 }}. {{ is_array($action) ? implode(' ', array_filter($action, 'is_string')) : $action }}</li>
                         @endforeach
@@ -101,10 +101,10 @@
                 [$scoreText] = Presentation::score($score);
             @endphp
             @if (is_array($section))
-                <div class="rounded-xl border border-white/10 bg-white/[0.02] p-4">
+                <div class="rounded-xl border border-zinc-200 bg-zinc-50 p-4 dark:border-white/10 dark:bg-white/[0.02]">
                     <div class="flex items-center justify-between">
-                        <p class="text-xs font-bold text-{{ $accent }}-300">{{ Presentation::SECTION_LABELS[$shortKey] }}</p>
-                        <span class="text-sm font-extrabold tabular-nums {{ $scoreText }}">{{ $score !== null ? number_format($score, 0) : '—' }}<span class="text-[10px] text-zinc-600">/100</span></span>
+                        <p class="text-xs font-bold text-{{ $accent }}-600 dark:text-{{ $accent }}-300">{{ Presentation::SECTION_LABELS[$shortKey] }}</p>
+                        <span class="text-sm font-extrabold tabular-nums {{ $scoreText }}">{{ $score !== null ? number_format($score, 0) : '—' }}<span class="text-[10px] font-bold text-zinc-400 dark:text-zinc-600">/100</span></span>
                     </div>
                     <div class="mt-3 space-y-2.5">
                         @foreach ($section as $subKey => $sub)
@@ -112,14 +112,14 @@
                                 @php $confidence = strtoupper((string) ($sub['confidence'] ?? '')); @endphp
                                 <div>
                                     <div class="flex items-center gap-2 text-[11px]">
-                                        <span class="text-zinc-400">{{ Presentation::FIELD_LABELS[$subKey] ?? ucwords(str_replace('_', ' ', $subKey)) }}</span>
+                                        <span class="text-zinc-500 dark:text-zinc-400">{{ Presentation::FIELD_LABELS[$subKey] ?? ucwords(str_replace('_', ' ', $subKey)) }}</span>
                                         @if (isset(Presentation::CONFIDENCE_CLASSES[$confidence]))
                                             <span class="rounded px-1 py-px text-[9px] font-bold {{ Presentation::CONFIDENCE_CLASSES[$confidence] }}">{{ $confidence }}</span>
                                         @endif
-                                        <span class="ml-auto tabular-nums font-bold text-zinc-300">{{ (int) $sub['score'] }}</span>
+                                        <span class="ml-auto tabular-nums font-bold text-zinc-700 dark:text-zinc-300">{{ (int) $sub['score'] }}<span class="text-[9px] font-bold text-zinc-400 dark:text-zinc-600">/100</span></span>
                                     </div>
-                                    <div class="mt-1 h-1 overflow-hidden rounded-full bg-white/5">
-                                        <div class="h-full bg-{{ $accent }}-400" style="width: {{ min(100, max(0, (int) $sub['score'])) }}%"></div>
+                                    <div class="mt-1 h-1 overflow-hidden rounded-full bg-zinc-200 dark:bg-white/5">
+                                        <div class="h-full bg-{{ $accent }}-500 dark:bg-{{ $accent }}-400" style="width: {{ min(100, max(0, (int) $sub['score'])) }}%"></div>
                                     </div>
                                     @php
                                         $answer = $sub['answer'] ?? null;
@@ -145,7 +145,7 @@
     {{-- Confidence distribution footnote --}}
     @php $distribution = collect($analysis['confidence_distribution'] ?? [])->filter(); @endphp
     @if ($distribution->sum() > 0)
-        <p class="text-[11px] text-zinc-600">
+        <p class="text-[11px] text-zinc-400 dark:text-zinc-600">
             Confidence:
             @foreach ($distribution as $level => $count)
                 <span class="mr-2">{{ strtoupper($level) }} × {{ $count }}</span>
@@ -162,7 +162,7 @@
                     @php $sourceUrl = is_array($source) ? ($source['url'] ?? null) : (is_string($source) ? $source : null); @endphp
                     <li class="truncate">
                         @if ($sourceUrl)
-                            <a href="{{ $sourceUrl }}" target="_blank" rel="noopener" class="text-violet-400 hover:underline">{{ is_array($source) ? ($source['domain'] ?? $sourceUrl) : $sourceUrl }}</a>
+                            <a href="{{ $sourceUrl }}" target="_blank" rel="noopener" class="text-violet-600 hover:underline dark:text-violet-400">{{ is_array($source) ? ($source['domain'] ?? $sourceUrl) : $sourceUrl }}</a>
                         @else
                             <span class="text-zinc-500">{{ is_array($source) ? implode(' ', array_filter($source, 'is_string')) : $source }}</span>
                         @endif

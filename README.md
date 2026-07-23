@@ -19,6 +19,8 @@ Built on [`a2zwebltd/brandgeo-laravel-client`](https://github.com/a2zwebltd/bran
 - **Brand-centric dashboard** — a default brand (auto-selected for single-brand accounts, persisted to `.env`) with a header switcher; per-brand view with monitoring first, then the latest audit.
 - **Monitoring** — KPI row, SVG visibility-trend chart, share of voice, competitor table, top cited sources, prompt-category insights, custom queries and recent AI answers with expandable responses.
 - **Audit drill-down** — engines grouped by mode (Online · Web Search first, then Offline · Trained), each expanding into key findings, analysis, the six visibility dimensions with confidence levels, and web sources.
+- **Scores that explain themselves** — every score reads as `X/100` with a plain-language band (Low · Weak · Fair · Strong · Excellent), an always-visible 0–100 scale bar, and the same Offline-Trained vs Online-Web-Search explainer the BrandGEO app shows, including how to read the web−trained gap.
+- **Follows Nova's theme** — light and dark, switched live with Nova's own toggle (no reload) and resolved before first paint, so the panel never flashes the wrong scheme.
 - **API key onboarding** — when `BRANDGEO_API_KEY` is missing, a branded form validates the key against the live API and writes it to the host `.env`; the page fully reloads with the new data.
 - **Plan-aware** — trial keys render locked-engine stubs and preview action plans; expired trials surface the 402 paywall state; deep links open the full BrandGEO dashboard.
 

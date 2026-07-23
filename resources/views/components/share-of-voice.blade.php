@@ -17,7 +17,7 @@
     $total = max(1e-6, $entries->sum('score'));
 @endphp
 <div>
-    <div class="flex h-4 w-full overflow-hidden rounded-full bg-white/5">
+    <div class="flex h-4 w-full overflow-hidden rounded-full bg-zinc-200 dark:bg-white/5">
         @foreach ($entries as $entry)
             <div style="width: {{ $entry['score'] / $total * 100 }}%; background: {{ $entry['color'] }}"
                  title="{{ $entry['name'] }} · {{ number_format($entry['score'], 1) }}%"></div>
@@ -25,7 +25,7 @@
     </div>
     <div class="mt-3 flex flex-wrap gap-x-4 gap-y-1.5 text-xs">
         @foreach ($entries as $entry)
-            <span class="flex items-center gap-1.5 {{ $entry['own'] ? 'font-bold' : 'text-zinc-400' }}">
+            <span class="flex items-center gap-1.5 {{ $entry['own'] ? 'font-bold' : 'text-zinc-500 dark:text-zinc-400' }}">
                 <span class="h-2.5 w-2.5 rounded-full" style="background: {{ $entry['color'] }}"></span>
                 {{ $entry['name'] }} <span class="tabular-nums">{{ number_format($entry['score'], 1) }}%</span>
             </span>

@@ -5,7 +5,7 @@
     [$rateText] = Presentation::score($insight['rate']);
     $label = ucwords(str_replace('_', ' ', $insight['category']));
 @endphp
-<div class="rounded-2xl border border-white/10 bg-zinc-900/70 p-4">
+<div class="rounded-2xl border border-zinc-200 bg-white p-4 dark:border-white/10 dark:bg-zinc-900/70">
     <div class="flex items-start justify-between gap-2">
         <div>
             <p class="text-sm font-bold">{{ $label }}</p>
@@ -13,7 +13,7 @@
         </div>
         <span class="text-xl font-extrabold tabular-nums {{ $rateText }}">{{ number_format($insight['rate'], 0) }}%</span>
     </div>
-    <p class="mt-2 text-xs text-zinc-400">Appeared in {{ $insight['visible'] }} of {{ $insight['total'] }} answers</p>
+    <p class="mt-2 text-xs text-zinc-500 dark:text-zinc-400">Appeared in {{ $insight['visible'] }} of {{ $insight['total'] }} answers</p>
     <div class="mt-2 flex items-center gap-2">
         @foreach ($insight['providers'] as $provider => $mentioned)
             <span class="h-2.5 w-2.5 rounded-full {{ $mentioned ? '' : 'opacity-20' }}"
@@ -21,7 +21,7 @@
                   title="{{ Presentation::providerLabel($provider) }}: {{ $mentioned ? 'brand surfaced' : 'not mentioned' }}"></span>
         @endforeach
         @if ($insight['sentiment'])
-            <span class="ml-auto rounded bg-white/5 px-1.5 py-0.5 text-[10px] font-semibold uppercase text-zinc-400">{{ $insight['sentiment'] }}</span>
+            <span class="ml-auto rounded bg-zinc-100 px-1.5 py-0.5 text-[10px] font-semibold uppercase text-zinc-500 dark:bg-white/5 dark:text-zinc-400">{{ $insight['sentiment'] }}</span>
         @endif
     </div>
 </div>

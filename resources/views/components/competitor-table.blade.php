@@ -22,7 +22,7 @@
             <th class="pb-2 text-right">vs. your brand</th>
         </tr>
     </thead>
-    <tbody class="divide-y divide-white/5">
+    <tbody class="divide-y divide-zinc-200 dark:divide-white/5">
         @forelse ($rows as $row)
             @php
                 $delta = $own - $row['score'];
@@ -30,21 +30,21 @@
             @endphp
             <tr>
                 <td class="py-2 font-semibold">{{ $row['name'] }}</td>
-                <td class="py-2 text-zinc-400">{{ $row['mentions'] }} / {{ $row['total'] }}</td>
+                <td class="py-2 text-zinc-500 dark:text-zinc-400">{{ $row['mentions'] }} / {{ $row['total'] }}</td>
                 <td class="py-2 pr-4">
                     <div class="flex items-center gap-2">
-                        <div class="h-1.5 flex-1 overflow-hidden rounded-full bg-white/5">
+                        <div class="h-1.5 flex-1 overflow-hidden rounded-full bg-zinc-200 dark:bg-white/5">
                             <div class="h-full {{ $bar }}" style="width: {{ min(100, $row['score']) }}%"></div>
                         </div>
                         <span class="tabular-nums text-xs {{ $text }}">{{ number_format($row['score'], 1) }}%</span>
                     </div>
                 </td>
-                <td class="py-2 text-right tabular-nums font-semibold {{ $delta >= 0 ? 'text-emerald-400' : 'text-red-400' }}">
+                <td class="py-2 text-right tabular-nums font-semibold {{ $delta >= 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-red-600 dark:text-red-400' }}">
                     {{ $delta >= 0 ? '+' : '' }}{{ number_format($delta, 1) }}
                 </td>
             </tr>
         @empty
-            <tr><td colspan="4" class="py-3 text-center text-zinc-600">No competitor data in the latest snapshot.</td></tr>
+            <tr><td colspan="4" class="py-3 text-center text-zinc-400 dark:text-zinc-600">No competitor data in the latest snapshot.</td></tr>
         @endforelse
     </tbody>
 </table>

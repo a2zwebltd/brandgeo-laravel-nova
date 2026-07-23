@@ -89,16 +89,16 @@ class Presentation
 
     /** sentiment => [accent border, icon] for finding cards */
     public const FINDING_SENTIMENT = [
-        'positive' => ['border-emerald-500/40', 'text-emerald-400', '▲'],
-        'neutral' => ['border-amber-500/40', 'text-amber-400', '◆'],
-        'negative' => ['border-red-500/40', 'text-red-400', '▼'],
+        'positive' => ['border-emerald-500/40', 'text-emerald-600 dark:text-emerald-400', '▲'],
+        'neutral' => ['border-amber-500/40', 'text-amber-600 dark:text-amber-400', '◆'],
+        'negative' => ['border-red-500/40', 'text-red-600 dark:text-red-400', '▼'],
     ];
 
     public const CONFIDENCE_CLASSES = [
-        'KNOW' => 'bg-emerald-500/15 text-emerald-300',
-        'PARTIAL' => 'bg-blue-500/15 text-blue-300',
-        'GUESSING' => 'bg-amber-500/15 text-amber-300',
-        'UNKNOWN' => 'bg-zinc-500/15 text-zinc-400',
+        'KNOW' => 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-300',
+        'PARTIAL' => 'bg-blue-500/15 text-blue-700 dark:text-blue-300',
+        'GUESSING' => 'bg-amber-500/15 text-amber-700 dark:text-amber-300',
+        'UNKNOWN' => 'bg-zinc-500/15 text-zinc-600 dark:text-zinc-400',
     ];
 
     public const PROVIDER_COLORS = [
@@ -143,16 +143,37 @@ class Presentation
         return self::PROVIDER_LABELS[$key] ?? ucfirst($key);
     }
 
-    /** BrandGEO ScoreColors bands. Returns [textClass, barClass, hex, label]. */
+    /**
+     * The 0–100 scale as label => range, low→high, mirroring BrandGEO's
+     * ScoreColors::scaleLegend(). Drives the always-visible score-scale bar.
+     * The bottom band reads "Low" rather than the app's "Critical" — this
+     * dashboard sits in the client's own admin, where a neutral word beats an
+     * alarming one.
+     *
+     * @var array<string, array{string, int}> label => [range, representative mid-score]
+     */
+    public const SCORE_BANDS = [
+        'Low' => ['0–19', 10],
+        'Weak' => ['20–39', 30],
+        'Fair' => ['40–59', 50],
+        'Strong' => ['60–79', 70],
+        'Excellent' => ['80–100', 90],
+    ];
+
+    /**
+     * BrandGEO ScoreColors bands. Returns [textClass, barClass, hex, label].
+     * Text/bar classes carry both themes (Nova's light mode and dark mode) —
+     * the *-400 shades alone wash out on a white surface.
+     */
     public static function score(?float $score): array
     {
         return match (true) {
-            $score === null => ['text-zinc-500', 'bg-zinc-600', '#71717a', '—'],
-            $score >= 80 => ['text-green-400', 'bg-green-400', '#4ade80', 'Excellent'],
-            $score >= 60 => ['text-emerald-400', 'bg-emerald-400', '#34d399', 'Strong'],
-            $score >= 40 => ['text-yellow-400', 'bg-yellow-400', '#facc15', 'Fair'],
-            $score >= 20 => ['text-orange-400', 'bg-orange-400', '#fb923c', 'Weak'],
-            default => ['text-red-400', 'bg-red-400', '#f87171', 'Critical'],
+            $score === null => ['text-zinc-400 dark:text-zinc-500', 'bg-zinc-300 dark:bg-zinc-600', '#71717a', '—'],
+            $score >= 80 => ['text-green-600 dark:text-green-400', 'bg-green-500 dark:bg-green-400', '#4ade80', 'Excellent'],
+            $score >= 60 => ['text-emerald-600 dark:text-emerald-400', 'bg-emerald-500 dark:bg-emerald-400', '#34d399', 'Strong'],
+            $score >= 40 => ['text-yellow-600 dark:text-yellow-400', 'bg-yellow-500 dark:bg-yellow-400', '#facc15', 'Fair'],
+            $score >= 20 => ['text-orange-600 dark:text-orange-400', 'bg-orange-500 dark:bg-orange-400', '#fb923c', 'Weak'],
+            default => ['text-red-600 dark:text-red-400', 'bg-red-500 dark:bg-red-400', '#f87171', 'Low'],
         };
     }
 

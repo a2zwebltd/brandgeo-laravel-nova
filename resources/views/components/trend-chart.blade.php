@@ -22,7 +22,7 @@
 @endphp
 <div>
     @if ($points->isEmpty())
-        <p class="py-8 text-center text-sm text-zinc-600">No snapshots in the current window yet.</p>
+        <p class="py-8 text-center text-sm text-zinc-400 dark:text-zinc-600">No snapshots in the current window yet.</p>
     @else
         <svg viewBox="0 0 {{ $width }} {{ $height }}" class="w-full" preserveAspectRatio="none" role="img" aria-label="Visibility trend">
             <defs>
@@ -35,17 +35,18 @@
                 <line x1="{{ $padX }}" x2="{{ $width - $padX }}"
                       y1="{{ $padY + ($height - 2 * $padY) * (1 - $grid / 100) }}"
                       y2="{{ $padY + ($height - 2 * $padY) * (1 - $grid / 100) }}"
-                      stroke="rgba(255,255,255,.05)" stroke-width="1" />
+                      class="stroke-zinc-200 dark:stroke-white/5" stroke-width="1" />
             @endforeach
             <polygon points="{{ $area }}" fill="url(#trendFill)" />
-            <polyline points="{{ $polyline }}" fill="none" stroke="#a78bfa" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round" />
+            <polyline points="{{ $polyline }}" fill="none" stroke="#8b5cf6" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round" />
             @foreach ($coords as $i => [$x, $y])
-                <circle cx="{{ $x }}" cy="{{ $y }}" r="3.5" fill="#8b5cf6" stroke="#09090b" stroke-width="1.5">
+                {{-- The node halo matches the card behind it in either theme. --}}
+                <circle cx="{{ $x }}" cy="{{ $y }}" r="3.5" fill="#8b5cf6" class="stroke-white dark:stroke-zinc-950" stroke-width="1.5">
                     <title>{{ $points[$i]->date?->format('Y-m-d') }} · {{ number_format($points[$i]->visibilityScore, 1) }}</title>
                 </circle>
             @endforeach
         </svg>
-        <div class="mt-1 flex justify-between text-[10px] text-zinc-600">
+        <div class="mt-1 flex justify-between text-[10px] text-zinc-400 dark:text-zinc-600">
             <span>{{ $points->first()->date?->format('M j') }}</span>
             <span>{{ $points->last()->date?->format('M j') }}</span>
         </div>

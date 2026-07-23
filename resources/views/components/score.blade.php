@@ -1,14 +1,11 @@
 @props(['score', 'size' => 'md'])
 @php
-    // Mirrors BrandGEO's ScoreColors bands (A≥80 … F<20).
-    $tone = match (true) {
-        $score === null => 'text-zinc-500',
-        $score >= 80 => 'text-emerald-400',
-        $score >= 60 => 'text-green-400',
-        $score >= 40 => 'text-amber-400',
-        $score >= 20 => 'text-orange-400',
-        default => 'text-red-400',
-    };
+    use A2ZWeb\BrandGeoNova\Support\Presentation;
+
+    [$tone] = Presentation::score($score);
     $text = $size === 'lg' ? 'text-4xl' : 'text-2xl';
+    $suffix = $size === 'lg' ? 'text-base' : 'text-xs';
 @endphp
-<span class="font-extrabold tabular-nums {{ $tone }} {{ $text }}">{{ $score !== null ? number_format($score, 1) : '—' }}</span>
+<span class="font-extrabold tabular-nums {{ $tone }} {{ $text }}">
+    {{ $score !== null ? number_format($score, 1) : '—' }}@if ($score !== null)<span class="{{ $suffix }} font-bold text-zinc-400 dark:text-zinc-500">/100</span>@endif
+</span>
