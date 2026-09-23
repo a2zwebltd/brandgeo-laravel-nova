@@ -25,8 +25,8 @@ class BrandGeoNovaServiceProvider extends ServiceProvider
     private function registerRoutes(): void
     {
         // The branded dashboard itself (standalone page, also loaded in the
-        // SPA tool's iframe) — behind Nova auth.
-        Route::middleware(config('brandgeo-nova.middleware'))
+        // SPA tool's iframe) — behind Nova auth AND the viewNova gate.
+        Route::middleware($this->dashboardMiddleware())
             ->prefix(config('brandgeo-nova.path'))
             ->name('brandgeo-nova.')
             ->group(__DIR__.'/../routes/web.php');
@@ -40,6 +40,26 @@ class BrandGeoNovaServiceProvider extends ServiceProvider
                     ->group(__DIR__.'/../routes/inertia.php');
             });
         }
+    }
+
+    /**
+     * The configured middleware, with Nova's Authorize (the viewNova gate)
+     * always enforced. Authenticate alone only checks that someone is logged
+     * in, yet these routes show account data and write the API key to .env,
+     * so a published config from before v1.0.8 must not leave them open to
+     * every logged-in user.
+     *
+     * @return array<int, string>
+     */
+    private function dashboardMiddleware(): array
+    {
+        $middleware = array_values((array) config('brandgeo-nova.middleware', []));
+
+        if (class_exists(Authorize::class) && ! in_array(Authorize::class, $middleware, true)) {
+            $middleware[] = Authorize::class;
+        }
+
+        return $middleware;
     }
 
     private function registerViews(): void

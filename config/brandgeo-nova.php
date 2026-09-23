@@ -1,6 +1,7 @@
 <?php
 
 use Laravel\Nova\Http\Middleware\Authenticate;
+use Laravel\Nova\Http\Middleware\Authorize;
 
 return [
 
@@ -22,13 +23,17 @@ return [
     |--------------------------------------------------------------------------
     |
     | Applied to the dashboard routes. Defaults to the web group plus Nova's
-    | Authenticate middleware, so only Nova-authorized users can access it.
+    | Authenticate (must be logged in) and Authorize (must pass the viewNova
+    | gate) middleware. Authorize is always enforced: the service provider
+    | appends it when a published config leaves it out, because these routes
+    | expose account data and write BRANDGEO_API_KEY to .env.
     |
     */
 
     'middleware' => [
         'web',
         Authenticate::class,
+        Authorize::class,
     ],
 
     /*
