@@ -12,6 +12,8 @@
         SubscriptionStatus::Free => ['Free · full access', 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border-emerald-500/30'],
         SubscriptionStatus::Active => ['Paid · '.($sub->plan ?? 'subscribed'), 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border-emerald-500/30'],
         SubscriptionStatus::Expired => ['Trial expired', 'bg-red-500/15 text-red-700 dark:text-red-300 border-red-500/30'],
+        // A status the installed client version doesn't know yet (SubscriptionStatus::Unknown in 2.x).
+        default => [ucfirst($sub->status->value), 'bg-zinc-500/15 text-zinc-700 dark:text-zinc-300 border-zinc-500/30'],
     };
 
     $monitor = $monitoring['monitor'] ?? null;
