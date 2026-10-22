@@ -26,13 +26,15 @@ return [
     | Authenticate (must be logged in) and Authorize (must pass the viewNova
     | gate) middleware. Authorize is always enforced: the service provider
     | appends it when a published config leaves it out, because these routes
-    | expose account data and write BRANDGEO_API_KEY to .env.
+    | expose account data and write BRANDGEO_API_KEY to .env. `nova:serving`
+    | must run before Authorize, as it registers the viewNova callback.
     |
     */
 
     'middleware' => [
         'web',
         Authenticate::class,
+        'nova:serving',
         Authorize::class,
     ],
 
